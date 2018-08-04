@@ -1,0 +1,46 @@
+{
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "amd": true,
+    "es6": true
+  },
+  "globals": {
+    "GLU": false
+  },
+  "rules": {
+    // the 1st argument refers to the level of code thrown when the rule is violated
+    // off => 0 , warn => 1, error => 2
+    "no-var": 2,
+    "no-alert": 2,
+    "indent": [2, 2],
+    "no-unused-vars": [2, { "vars": "all", "args": "none" }],
+    "no-console": 1,
+    "no-debugger": 1,
+    "eqeqeq": 2,
+    "space-before-blocks": [2, "always"],
+    "keyword-spacing": [2, {"before": true, "after": true}],
+    "computed-property-spacing": [2, "never"],
+    "semi-spacing": [2, {"before": false, "after": true}],
+    "space-infix-ops": [2, {"int32Hint": true}],
+    "max-statements": [2, 200],
+    "semi": 2,
+
+    // Rules specific to handle ES6 conventions
+    "prefer-template": [2],
+    "rest-spread-spacing": [2, "never"],
+    "template-curly-spacing": [2, "never"],
+    "no-this-before-super": 2,
+    "no-useless-constructor": 2,
+    "no-useless-rename": 2,
+    "prefer-const": 2,
+    "prefer-destructuring": ["error", { "array": true, "object": true }, { "enforceForRenamedProperties": false }],
+    "arrow-spacing": 2,
+    "constructor-super": 2,
+    "no-const-assign": 2,
+    "no-duplicate-imports": 2
+  }
+}
