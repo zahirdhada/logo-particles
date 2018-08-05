@@ -1,5 +1,5 @@
 import "babel-polyfill";
-import Phenomenon from 'phenomenon';
+import Phenomenon from 'phenomenon/src';
 import "./assets/styles/styles.scss";
 import tlIcon from "./assets/images/tl-icon.png";
 import tlLogo from "./assets/images/tl-logo.png";
@@ -35,26 +35,34 @@ const uniforms = {
   },
 };
 
-const canvas = document.getElementById('canvas');
-
 // Create the renderer
 const phenomenon = new Phenomenon({
-  canvas: canvas,
+  canvas: document.getElementById('canvas'),
   context: {
-    Antialias: true,
+    antialias: true,
   },
+  contextType: 'webgl2',
   settings: {
     clearColor: [239 / 255, 239 / 255, 239 / 255, 1],
-    devicePixelRatio,
+    devicePixelRatio: window.devicePixelRatio || 1,
     position: {x: 0, y: 0, z: 3},
     shouldRender: true,
     uniforms,
   },
 });
+const onResize = () => {
+  uniforms.uViewport = {
+    type: 'vec4',
+    value: [0,0,phenomenon.canvas.width, phenomenon.canvas.height],
+  };
+};
+$(window).on('resize', onResize);
+onResize();
 const changeImage = async (image) => {
   $('.change-image').prop('disabled', true);
   const imgUrl = ImageMap[image];
   const duration = 0.6;
+  const animationDuration = 6000;
   const { multiplier, attributes } = await initAttributes(imgUrl, duration, phenomenon);
 
   // Vertex shader used to calculate the position
@@ -64,6 +72,7 @@ const changeImage = async (image) => {
   const fragment = fragmentShader();
 
   phenomenon.remove('image');
+  let prevTime = performance.now();
   phenomenon.add('image', {
     attributes: attributes.map(a => Object.assign({}, a)),
     multiplier,
@@ -71,8 +80,12 @@ const changeImage = async (image) => {
     vertex,
     fragment,
     onRender: (instance) => {
+      const curTime = performance.now();
+      const deltaTime = curTime - prevTime;
+      prevTime = curTime;
+
       if (instance.uniforms.uProgress.value <= 1) {
-        instance.uniforms.uProgress.value += 0.0166666667 / 6;
+        instance.uniforms.uProgress.value += deltaTime / animationDuration;
       }
     },
   });

@@ -1,25 +1,8 @@
-import GLU from "./GLU";
 import imageDataLoader from './image-data-loader';
 
 export const getRandom = (value) => {
   const floor = -value;
   return floor + Math.random() * value * 2;
-};
-
-export const unproject = (x, y, phenomenon) => {
-  const viewportArray = [
-    0, 0, phenomenon.canvas.width, phenomenon.canvas.height
-  ];
-
-  // The results of the operation will be stored in this array.
-  const modelPointArrayResults = [];
-
-  GLU.unProject(
-    x, y, 1,
-    phenomenon.uniforms.uModelMatrix.value, phenomenon.uniforms.uProjectionMatrix.value,
-    viewportArray, modelPointArrayResults);
-
-  return modelPointArrayResults;
 };
 
 export const initAttributes = async (imgUrl, duration, phenomenon) => {
@@ -63,10 +46,9 @@ export const initAttributes = async (imgUrl, duration, phenomenon) => {
       size: 3,
     },
     {
-      name: 'aPositionEnd',
+      name: 'aPositionEndScreen',
       data: (i) => {
-        const coords = unproject(offsetX + pixels[i].x, canvas.height - (offsetY + pixels[i].y), phenomenon);
-        return coords;
+        return [offsetX + pixels[i].x, canvas.height - (offsetY + pixels[i].y), 1.0];
       },
       size: 3,
     },
